@@ -27,6 +27,7 @@ void main() {
 			printf("%d\r\n", sec);
 			sec++;
 			old_tim = tim;
+			HAL_GPIO_TogglePin(LED_GREEN_PORT, LED_GREEN_PIN);
 			HAL_GPIO_TogglePin(LED_RED_PORT, LED_RED_PIN);
 			HAL_GPIO_TogglePin(LED_BLUE_PORT, LED_BLUE_PIN);
 		}
@@ -56,12 +57,16 @@ void GPIO_Init() {
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
 
 	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOD_CLK_ENABLE();
 
-	GPIO_InitStruct.Pin = LED_RED_PIN | LED_BLUE_PIN;
+	GPIO_InitStruct.Pin = LED_RED_PIN | LED_GREEN_PIN;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+	GPIO_InitStruct.Pin = LED_BLUE_PIN;
+	HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 }
 
 PUTCHAR_PROTOTYPE {
