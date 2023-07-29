@@ -1,7 +1,13 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
+#ifdef __GNUC__
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#define GETCHAR_PROTOTYPE int __io_getchar(void)
+#else
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#define GETCHAR_PROTOTYPE int fgetc(FILE *f)
+#endif
 
 // LEDs:
 // PA14, PA13, PH7, PD11

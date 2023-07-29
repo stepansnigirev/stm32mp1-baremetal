@@ -5,6 +5,7 @@ void UART4_Init(void);
 void GPIO_Init(void);
 void Error_Handler(void);
 void soft_breakpoint();
+void toggle_leds();
 
 UART_HandleTypeDef huart4;
 const char *global_constant_string = "And hi to you too!\r\n";
@@ -15,23 +16,35 @@ void main() {
 	GPIO_Init();
 	UART4_Init();
 	
+    // disable buffering for the input stream
+    // https://forum.digikey.com/t/easily-use-scanf-on-stm32/21103
+    setvbuf(stdin, NULL, _IONBF, 0);
+
 	printf("\r\nHello from HAL Driver!\r\n");
 	printf("%s", global_constant_string);
+    toggle_leds();
 
-	uint32_t sec = 0;
-	uint32_t tim = 0;
-	uint32_t old_tim = 0;
-	while (1) {
-		tim = HAL_GetTick();
-		if(tim > (old_tim + 1000)) {
-			printf("%d\r\n", sec);
-			sec++;
-			old_tim = tim;
-			HAL_GPIO_TogglePin(LED_GREEN_PORT, LED_GREEN_PIN);
-			HAL_GPIO_TogglePin(LED_RED_PORT, LED_RED_PIN);
-			HAL_GPIO_TogglePin(LED_BLUE_PORT, LED_BLUE_PIN);
-		}
-	}
+    int i;
+    while(1){
+        printf("Enter LEDs mask to toggle [0-7]:\r\n>>> ");
+        scanf("%d", &i);
+        if(i & 1){
+            HAL_GPIO_TogglePin(LED_GREEN_PORT, LED_GREEN_PIN);
+        }
+        if(i & 2){
+            HAL_GPIO_TogglePin(LED_RED_PORT, LED_RED_PIN);
+        }
+        if(i & 4){
+            HAL_GPIO_TogglePin(LED_BLUE_PORT, LED_BLUE_PIN);
+        }
+        printf("\r\nDone.\r\n");
+    }
+}
+
+void toggle_leds(){
+    HAL_GPIO_TogglePin(LED_GREEN_PORT, LED_GREEN_PIN);
+    HAL_GPIO_TogglePin(LED_RED_PORT, LED_RED_PIN);
+    HAL_GPIO_TogglePin(LED_BLUE_PORT, LED_BLUE_PIN);
 }
 
 void UART4_Init(void)
@@ -70,7 +83,20 @@ void GPIO_Init() {
 }
 
 PUTCHAR_PROTOTYPE {
-  HAL_UART_Transmit(&huart4, (uint8_t *)&ch, 1, 0xFFFF);
+  HAL_UART_Transmit(&huart4, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+  return ch;
+}
+
+GETCHAR_PROTOTYPE {
+  uint8_t ch = 0;
+
+  /* Clear the Overrun flag just before receiving the first character */
+  __HAL_UART_CLEAR_OREFLAG(&huart4);
+
+  /* Wait for reception of a character on the USART RX line and echo this
+   * character on console */
+  HAL_UART_Receive(&huart4, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+  HAL_UART_Transmit(&huart4, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
   return ch;
 }
 
