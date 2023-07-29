@@ -11,6 +11,9 @@ static inline void init_leds();
 
 const char *global_constant_string = "And hi to you too!\r\n";
 
+// LEDs:
+// PA14, PA13, PH7, PD11
+
 void main()
 {
 	// Test UART
@@ -28,17 +31,17 @@ void main()
 	// Test LEDs
 	init_leds();
 
-	LL_GPIO_SetOutputPin(GPIOI, LL_GPIO_PIN_8);
-	LL_GPIO_ResetOutputPin(GPIOI, LL_GPIO_PIN_8);
+	LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_14);
+	LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_14);
 
-	LL_GPIO_SetOutputPin(GPIOI, LL_GPIO_PIN_9);
-	LL_GPIO_ResetOutputPin(GPIOI, LL_GPIO_PIN_9);
+	LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_13);
+	LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_13);
 
-	LL_GPIO_SetOutputPin(GPIOZ, LL_GPIO_PIN_6);
-	LL_GPIO_ResetOutputPin(GPIOZ, LL_GPIO_PIN_6);
+	/*LL_GPIO_SetOutputPin(GPIOH, LL_GPIO_PIN_7);*/
+	/*LL_GPIO_ResetOutputPin(GPIOH, LL_GPIO_PIN_7);*/
 
-	LL_GPIO_SetOutputPin(GPIOZ, LL_GPIO_PIN_7);
-	LL_GPIO_ResetOutputPin(GPIOZ, LL_GPIO_PIN_7);
+	LL_GPIO_SetOutputPin(GPIOD, LL_GPIO_PIN_11);
+	LL_GPIO_ResetOutputPin(GPIOD, LL_GPIO_PIN_11);
 
 	// Test function calls (tests the stack)
 	// So far, every function call has been inline
@@ -54,21 +57,21 @@ void main()
 
 	// Blink those lights forever!
 	while (1) {
-		LL_GPIO_SetOutputPin(GPIOI, LL_GPIO_PIN_8);
+		LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_14);
 		delay_long();
-		LL_GPIO_ResetOutputPin(GPIOI, LL_GPIO_PIN_8);
+		LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_14);
 
-		LL_GPIO_SetOutputPin(GPIOI, LL_GPIO_PIN_9);
+		LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_13);
 		delay_long();
-		LL_GPIO_ResetOutputPin(GPIOI, LL_GPIO_PIN_9);
+		LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_13);
 
-		LL_GPIO_SetOutputPin(GPIOZ, LL_GPIO_PIN_6);
-		delay_long();
-		LL_GPIO_ResetOutputPin(GPIOZ, LL_GPIO_PIN_6);
+		/*LL_GPIO_SetOutputPin(GPIOH, LL_GPIO_PIN_7);*/
+		/*delay_long();*/
+		/*LL_GPIO_ResetOutputPin(GPIOH, LL_GPIO_PIN_7);*/
 
-		LL_GPIO_SetOutputPin(GPIOZ, LL_GPIO_PIN_7);
+		LL_GPIO_SetOutputPin(GPIOD, LL_GPIO_PIN_11);
 		delay_long();
-		LL_GPIO_ResetOutputPin(GPIOZ, LL_GPIO_PIN_7);
+		LL_GPIO_ResetOutputPin(GPIOD, LL_GPIO_PIN_11);
 	};
 }
 
@@ -103,17 +106,26 @@ static inline void init_leds()
 	// GPIO Z, pin 6 = red D1
 	// GPIO Z, pin 7 = green D1
 	// all LEDs are active low
+    // STM32MP157F-DK2 LEDs:
+    // PA14, PA13, PH7, PD11
 
 	// Enable RCC for GPIO I and GPIO Z (for the LEDs on the OSD32 board)
-	RCC->MC_AHB4ENSETR |= RCC_MC_AHB4ENSETR_GPIOIEN;
-	RCC->MC_AHB5ENSETR |= RCC_MC_AHB5ENSETR_GPIOZEN;
+	RCC->MC_AHB4ENSETR |= RCC_MC_AHB4ENSETR_GPIOAEN;
+	/*RCC->MC_AHB4ENSETR |= RCC_MC_AHB4ENSETR_GPIOHEN;*/
+	RCC->MC_AHB4ENSETR |= RCC_MC_AHB4ENSETR_GPIODEN;
 
-	LL_GPIO_SetPinMode(GPIOI, LL_GPIO_PIN_8, LL_GPIO_MODE_OUTPUT);
-	LL_GPIO_SetPinOutputType(GPIOI, LL_GPIO_PIN_8, LL_GPIO_OUTPUT_PUSHPULL);
-	LL_GPIO_SetPinSpeed(GPIOI, LL_GPIO_PIN_8, LL_GPIO_SPEED_FREQ_MEDIUM);
-	LL_GPIO_SetPinMode(GPIOI, LL_GPIO_PIN_9, LL_GPIO_MODE_OUTPUT);
-	LL_GPIO_SetPinOutputType(GPIOI, LL_GPIO_PIN_9, LL_GPIO_OUTPUT_PUSHPULL);
-	LL_GPIO_SetPinSpeed(GPIOI, LL_GPIO_PIN_9, LL_GPIO_SPEED_FREQ_MEDIUM);
+	LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_14, LL_GPIO_MODE_OUTPUT);
+	LL_GPIO_SetPinOutputType(GPIOA, LL_GPIO_PIN_14, LL_GPIO_OUTPUT_PUSHPULL);
+	LL_GPIO_SetPinSpeed(GPIOA, LL_GPIO_PIN_14, LL_GPIO_SPEED_FREQ_MEDIUM);
+	LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_13, LL_GPIO_MODE_OUTPUT);
+	LL_GPIO_SetPinOutputType(GPIOA, LL_GPIO_PIN_13, LL_GPIO_OUTPUT_PUSHPULL);
+	LL_GPIO_SetPinSpeed(GPIOA, LL_GPIO_PIN_13, LL_GPIO_SPEED_FREQ_MEDIUM);
+	/*LL_GPIO_SetPinMode(GPIOH, LL_GPIO_PIN_7, LL_GPIO_MODE_OUTPUT);*/
+	/*LL_GPIO_SetPinOutputType(GPIOH, LL_GPIO_PIN_7, LL_GPIO_OUTPUT_PUSHPULL);*/
+	/*LL_GPIO_SetPinSpeed(GPIOH, LL_GPIO_PIN_7, LL_GPIO_SPEED_FREQ_MEDIUM);*/
+	LL_GPIO_SetPinMode(GPIOD, LL_GPIO_PIN_11, LL_GPIO_MODE_OUTPUT);
+	LL_GPIO_SetPinOutputType(GPIOD, LL_GPIO_PIN_11, LL_GPIO_OUTPUT_PUSHPULL);
+	LL_GPIO_SetPinSpeed(GPIOD, LL_GPIO_PIN_11, LL_GPIO_SPEED_FREQ_MEDIUM);
 }
 
 // Handy utility when using a debugger

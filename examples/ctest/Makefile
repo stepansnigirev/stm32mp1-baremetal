@@ -17,7 +17,8 @@ INCLUDES = -I. \
 		   -I$(EXTLIBDIR)/STM32MP1xx_HAL_Driver/Inc \
 		   -I$(EXTLIBDIR)/CMSIS/Core_A/Include \
 		   -I$(EXTLIBDIR)/CMSIS/Device/ST/STM32MP1xx/Include \
-		   -I$(SHAREDDIR)\
+		   -I$(SHAREDDIR) \
+
 
 include $(SHAREDDIR)/makefile-common.mk
 
