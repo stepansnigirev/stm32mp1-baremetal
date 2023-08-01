@@ -13,8 +13,8 @@
 #include "stm32disco_conf.hh"
 
 // Uncomment one of these to select your board:
-namespace Board = OSD32BRK;
-// namespace Board = STM32MP1Disco;
+// namespace Board = OSD32BRK;
+namespace Board = STM32MP1Disco;
 
 extern PCD_HandleTypeDef hpcd;
 
